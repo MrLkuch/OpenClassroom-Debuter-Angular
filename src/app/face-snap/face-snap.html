@@ -1,6 +1,11 @@
 <div class="face-snap-card">
   <h2>{{ FaceSnapClass.title }}</h2>
   <img [src]="FaceSnapClass.imageUrl" [alt]="FaceSnapClass.title">
+  @if (FaceSnapClass.location) {
+    <p>Localisation : {{ FaceSnapClass.location }}</p>
+  } @else {
+    <p>Localisation non spécifiée</p>
+  }
   <p>{{ FaceSnapClass.description }}</p>
   <p>FaceSnap créée le {{ FaceSnapClass.createdAt }}</p>
   <p>

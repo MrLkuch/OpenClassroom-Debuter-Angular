@@ -20,5 +20,6 @@ export class App {
       new Date(),
       0
     );
+    this.mySnap.setLocation('à la montagne');
   }
 }
