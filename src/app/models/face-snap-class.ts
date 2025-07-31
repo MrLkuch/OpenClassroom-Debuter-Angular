@@ -19,4 +19,9 @@ export class FaceSnapClass {
   setLocation(location: string): void {
     this.location = location;
   }
+
+  withLocation(location: string): FaceSnapClass {
+    this.setLocation(location);
+    return this;
+  }
 }
