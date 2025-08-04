@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { RouterLink, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 
 @Component({
   selector: 'app-landing-page',
-  imports: [RouterLink],
+  imports: [],
   templateUrl: './landing-page.html',
   styleUrl: './landing-page.scss'
 })
