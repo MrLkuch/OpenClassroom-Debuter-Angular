@@ -4,6 +4,7 @@ import { NgStyle, NgClass, UpperCasePipe, DatePipe } from '@angular/common';
 import { FaceSnapsService } from '../services/face-snaps.service';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Observable, tap } from 'rxjs';
 
 
 @Component({
@@ -15,6 +16,7 @@ import { CommonModule } from '@angular/common';
 export class SingleFaceSnap {
 
    faceSnap!: FaceSnapClass;
+   faceSnap$!: Observable<FaceSnapClass>;
   buttonText!: string;
 
   constructor(private faceSnapsService: FaceSnapsService,
@@ -23,16 +25,18 @@ export class SingleFaceSnap {
   ngOnInit() {
     this.buttonText = 'Oh Snap!';
     const faceSnapId = +this.route.snapshot.params['id'];
-    this.faceSnap = this.faceSnapsService.getFaceSnapById(faceSnapId);
+    this.faceSnap$ = this.faceSnapsService.getFaceSnapById(faceSnapId);
   }
 
-  onSnap() {
-    if (this.buttonText === 'Oh Snap!') {
-      this.faceSnapsService.snapFaceSnapById(this.faceSnap.id, 'snap');
-      this.buttonText = 'Oops, unSnap!';
-    } else {
-      this.faceSnapsService.snapFaceSnapById(this.faceSnap.id, 'unsnap');
-      this.buttonText = 'Oh Snap!';
-    }
+  onSnap(faceSnapId: number) {
+      if (this.buttonText === 'Oh Snap!') {
+          this.faceSnap$ = this.faceSnapsService.snapFaceSnapById(faceSnapId, 'snap').pipe(
+              tap(() => this.buttonText = 'Oops, unSnap!')
+          );
+      } else {
+          this.faceSnap$ = this.faceSnapsService.snapFaceSnapById(faceSnapId, 'unsnap').pipe(
+              tap(() => this.buttonText = 'Oh Snap!')
+          );
+      }
   }
 }
