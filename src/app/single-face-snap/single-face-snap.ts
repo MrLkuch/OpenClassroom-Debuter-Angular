@@ -3,57 +3,36 @@ import {FaceSnapClass } from '../models/face-snap-class';
 import { NgStyle, NgClass, UpperCasePipe, DatePipe } from '@angular/common';
 import { FaceSnapsService } from '../services/face-snaps.service';
 import { ActivatedRoute } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
   selector: 'app-single-face-snap',
-  imports: [ NgStyle, NgClass, UpperCasePipe, DatePipe ],
+  imports: [ NgStyle, NgClass, UpperCasePipe, DatePipe, CommonModule ],
   templateUrl: './single-face-snap.html',
   styleUrl: './single-face-snap.scss'
 })
 export class SingleFaceSnap {
 
-  faceSnap!: FaceSnapClass;
-  snapButtonText!: string;
-  userHasSnapped!: boolean;
+   faceSnap!: FaceSnapClass;
+  buttonText!: string;
 
   constructor(private faceSnapsService: FaceSnapsService,
               private route: ActivatedRoute) {}
 
-
-  ngOnInit(): void {
-    this.prepareInterface();
-    this.getFaceSnap();
-  }
-  
-  // ...
-  private prepareInterface() {
-    this.snapButtonText = 'Oh Snap!';
-    this.userHasSnapped = false;
-  }
-
-  private getFaceSnap() {
-    const faceSnapId = this.route.snapshot.params['id'];
+  ngOnInit() {
+    this.buttonText = 'Oh Snap!';
+    const faceSnapId = +this.route.snapshot.params['id'];
     this.faceSnap = this.faceSnapsService.getFaceSnapById(faceSnapId);
   }
 
-  onSnap(): void {
-    if(this.userHasSnapped){
-      this.unSnap();
+  onSnap() {
+    if (this.buttonText === 'Oh Snap!') {
+      this.faceSnapsService.snapFaceSnapById(this.faceSnap.id, 'snap');
+      this.buttonText = 'Oops, unSnap!';
     } else {
-      this.snap();
+      this.faceSnapsService.snapFaceSnapById(this.faceSnap.id, 'unsnap');
+      this.buttonText = 'Oh Snap!';
     }
-  }
-
-  unSnap() {
-    this.faceSnapsService.snapFaceSnapById(this.faceSnap.id, 'unsnap');
-    this.snapButtonText = 'Oh Snap!';
-    this.userHasSnapped = false;
-  }
-
-  snap() {
-    this.faceSnapsService.snapFaceSnapById(this.faceSnap.id, 'snap');
-    this.snapButtonText = 'Oops, unSnap!';
-    this.userHasSnapped = true;
   }
 }

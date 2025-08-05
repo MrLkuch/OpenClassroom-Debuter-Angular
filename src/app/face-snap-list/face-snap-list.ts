@@ -12,23 +12,10 @@ import { interval, tap, takeUntil, Subject } from 'rxjs';
 })
 export class FaceSnapList {
  faceSnaps!: FaceSnapClass[];
-  private destroy$!: Subject<boolean>;
 
- constructor(private faceSnapsService: FaceSnapsService) { }
- ngOnInit(): void {
+  constructor(private faceSnapsService: FaceSnapsService) { }
 
-  this.destroy$ = new Subject<boolean>();
-
-    this.faceSnaps = this.faceSnapsService.getFaceSnaps();
-    interval(1000).pipe(
-    tap(console.log),
-    takeUntil(this.destroy$)
-).subscribe();
-
-interval(1000).subscribe(value => console.log(value % 3 !== 0 ? 'Tick' : 'BANG'));
-}
-
-ngOnDestroy(): void {
-    this.destroy$.next(true);
-}
+  ngOnInit(): void {
+    this.faceSnaps = this.faceSnapsService.getAllFaceSnaps();
+  }
 }
